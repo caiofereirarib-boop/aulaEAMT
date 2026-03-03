@@ -1,1 +1,235 @@
-# aulaEAMT
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Educação Digital 2026</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
+    
+    <style>
+        :root {
+            --bg-main: #121418;
+            --bg-card: #1c1f26;
+            --accent: #6366f1;
+            --text-dim: #94a3b8;
+        }
+
+        body {
+            background-color: var(--bg-main);
+            color: #e2e8f0;
+            font-family: 'Inter', sans-serif;
+            overflow: hidden;
+        }
+
+        /* Efeito de Neomorfismo Suave/Glass */
+        .glass-card {
+            background: var(--bg-card);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            border-radius: 16px;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .glass-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.3);
+            border-color: rgba(99, 102, 241, 0.3);
+        }
+
+        .sidebar-item {
+            transition: all 0.2s;
+            border-left: 3px solid transparent;
+        }
+
+        .sidebar-item.active {
+            background: rgba(99, 102, 241, 0.1);
+            color: white;
+            border-left-color: var(--accent);
+        }
+
+        /* Scrollbar customizada */
+        ::-webkit-scrollbar { width: 6px; }
+        ::-webkit-scrollbar-track { background: var(--bg-main); }
+        ::-webkit-scrollbar-thumb { background: #334155; border-radius: 10px; }
+    </style>
+</head>
+<body class="flex h-screen">
+
+    <aside class="w-64 bg-[#0f1115] border-r border-gray-800 flex flex-col pt-8">
+        <div class="px-8 mb-10 flex items-center gap-3">
+            <div class="w-8 h-8 bg-indigo-600 rounded-lg flex items-center justify-center font-bold">E</div>
+            <span class="font-bold tracking-tight">EDU-DASH</span>
+        </div>
+        
+        <nav class="flex-1 space-y-1 px-4">
+            <a href="#" class="sidebar-item active flex items-center px-4 py-3 text-sm rounded-md">Visão Geral</a>
+            <a href="#" class="sidebar-item flex items-center px-4 py-3 text-sm text-slate-400 hover:text-white">Metodologias</a>
+            <a href="#" class="sidebar-item flex items-center px-4 py-3 text-sm text-slate-400 hover:text-white">Habilidades</a>
+            <a href="#" class="sidebar-item flex items-center px-4 py-3 text-sm text-slate-400 hover:text-white">Brasil</a>
+        </nav>
+
+        <div class="p-4 mt-auto border-t border-gray-800">
+            <div class="bg-indigo-900/20 p-4 rounded-xl text-xs text-indigo-300">
+                A tecnologia é o mediador do novo saber.
+            </div>
+        </div>
+    </aside>
+
+    <main class="flex-1 flex flex-col overflow-y-auto bg-[#121418]">
+        <header class="h-20 flex items-center justify-between px-10">
+            <h2 class="text-xl font-semibold">Dashboard Educacional</h2>
+            <div class="flex items-center gap-6">
+                <span id="current-date" class="text-sm text-slate-500"></span>
+                <div class="w-10 h-10 rounded-full bg-slate-800 border border-slate-700"></div>
+            </div>
+        </header>
+
+        <div class="px-10 pb-10 space-y-8">
+            
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                <div class="glass-card p-6">
+                    <span class="text-indigo-400 text-xs font-bold uppercase tracking-widest">Acesso</span>
+                    <h3 class="text-lg font-semibold mt-1">Conhecimento Global</h3>
+                    <p class="text-sm text-slate-400 mt-2">Khan Academy e Coursera democratizando o saber online.</p>
+                </div>
+                <div class="glass-card p-6">
+                    <span class="text-emerald-400 text-xs font-bold uppercase tracking-widest">Modalidade</span>
+                    <h3 class="text-lg font-semibold mt-1">Expansão do EAD</h3>
+                    <p class="text-sm text-slate-400 mt-2">Uso massivo de Google Classroom e Teams pós-pandemia.</p>
+                </div>
+                <div class="glass-card p-6">
+                    <span class="text-amber-400 text-xs font-bold uppercase tracking-widest">Inovação</span>
+                    <h3 class="text-lg font-semibold mt-1">IA Personalizada</h3>
+                    <p class="text-sm text-slate-400 mt-2">Exercícios adaptados e feedback imediato via algoritmos.</p>
+                </div>
+            </div>
+
+            <div class="glass-card p-8">
+                <div class="flex justify-between items-start mb-6">
+                    <div>
+                        <h3 class="text-lg font-bold">Crescimento da Educação Digital no Brasil</h3>
+                        <p class="text-sm text-slate-500">Relação entre infraestrutura e adesão ao EAD</p>
+                    </div>
+                    <button class="text-xs bg-slate-800 px-3 py-1 rounded hover:bg-slate-700">Exportar PDF</button>
+                </div>
+                <div class="h-64 w-full">
+                    <canvas id="mainChart"></canvas>
+                </div>
+            </div>
+
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+                <div class="glass-card p-6">
+                    <h3 class="text-md font-bold mb-4 border-b border-gray-800 pb-2">Novas Metodologias & Mediação</h3>
+                    <ul class="space-y-4">
+                        <li class="flex gap-4 items-start">
+                            <div class="mt-1 w-2 h-2 rounded-full bg-indigo-500"></div>
+                            <div>
+                                <p class="text-sm font-semibold">Sala de Aula Invertida</p>
+                                <p class="text-xs text-slate-500">Gamificação e ensino híbrido para maior engajamento.</p>
+                            </div>
+                        </li>
+                        <li class="flex gap-4 items-start">
+                            <div class="mt-1 w-2 h-2 rounded-full bg-indigo-500"></div>
+                            <div>
+                                <p class="text-sm font-semibold">O Professor Mediador</p>
+                                <p class="text-xs text-slate-500">Foco no pensamento crítico e uso responsável da tecnologia.</p>
+                            </div>
+                        </li>
+                    </ul>
+                </div>
+
+                <div class="glass-card p-6">
+                    <h3 class="text-md font-bold mb-4 border-b border-gray-800 pb-2">Análise de Impacto</h3>
+                    <div class="overflow-x-auto">
+                        <table class="w-full text-left text-sm">
+                            <thead>
+                                <tr class="text-slate-500 text-xs">
+                                    <th class="py-2">Habilidades</th>
+                                    <th class="py-2">Pontos Positivos</th>
+                                    <th class="py-2">Desafios</th>
+                                </tr>
+                            </thead>
+                            <tbody class="text-xs">
+                                <tr class="border-b border-gray-800">
+                                    <td class="py-3">Alfabetização Digital</td>
+                                    <td class="py-3 text-emerald-400">Inclusão Digital</td>
+                                    <td class="py-3 text-red-400">Acesso à Internet</td>
+                                </tr>
+                                <tr class="border-b border-gray-800">
+                                    <td class="py-3">Autonomia</td>
+                                    <td class="py-3 text-emerald-400">Flexibilidade</td>
+                                    <td class="py-3 text-red-400">Distrações</td>
+                                </tr>
+                                <tr>
+                                    <td class="py-3">Colaboração</td>
+                                    <td class="py-3 text-emerald-400">Democratização</td>
+                                    <td class="py-3 text-red-400">Capacitação Prof.</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <script>
+        // 1. Atualizar Data via JS
+        const dateElement = document.getElementById('current-date');
+        const options = { day: 'numeric', month: 'long', year: 'numeric' };
+        dateElement.innerText = new Date().toLocaleDateString('pt-BR', options);
+
+        // 2. Configuração do Gráfico (Chart.js)
+        const ctx = document.getElementById('mainChart').getContext('2d');
+        
+        // Gradiente para o gráfico
+        const gradient = ctx.createLinearGradient(0, 0, 0, 400);
+        gradient.addColorStop(0, 'rgba(99, 102, 241, 0.4)');
+        gradient.addColorStop(1, 'rgba(99, 102, 241, 0)');
+
+        new Chart(ctx, {
+            type: 'line',
+            data: {
+                labels: ['2018', '2019', '2020', '2021', '2022', '2023', '2024', '2025', '2026'],
+                datasets: [{
+                    label: 'Adesão ao Ensino Digital (%)',
+                    data: [15, 18, 65, 72, 68, 75, 82, 88, 92],
+                    borderColor: '#6366f1',
+                    borderWidth: 3,
+                    fill: true,
+                    backgroundColor: gradient,
+                    tension: 0.4,
+                    pointRadius: 0,
+                    pointHoverRadius: 6
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: { legend: { display: false } },
+                scales: {
+                    y: { 
+                        beginAtZero: true, 
+                        grid: { color: 'rgba(255,255,255,0.05)' },
+                        ticks: { color: '#64748b' }
+                    },
+                    x: { 
+                        grid: { display: false },
+                        ticks: { color: '#64748b' }
+                    }
+                }
+            }
+        });
+
+        // 3. Interatividade Simples na Sidebar
+        const items = document.querySelectorAll('.sidebar-item');
+        items.forEach(item => {
+            item.addEventListener('click', () => {
+                items.forEach(i => i.classList.remove('active'));
+                item.classList.add('active');
+            });
+        });
+    </script>
+</body>
+</html>
